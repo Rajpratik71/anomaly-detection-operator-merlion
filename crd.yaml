@@ -1,0 +1,58 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: anomalydetectors.anomaly-operator.com
+spec:
+  group: anomaly-operator.com
+  names:
+    kind: AnomalyDetector
+    plural: anomalydetectors
+    singular: anomalydetector
+    listKind: AnomalyDetectorList
+  scope: Namespaced  # Use "Namespaced" if your CRD will be used in namespaces, "Cluster" if cluster-wide
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                metrics:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      metricSource:
+                        type: string
+                        description: "The source of the metrics (e.g., prometheus, influxdb, thanos, mimir)"
+                      metricURL:
+                        type: string
+                        description: "The URL of the metric source"
+                      metricQuery:
+                        type: string
+                        description: "The query to fetch the metric"
+                      auth:
+                        type: object
+                        properties:
+                          username:
+                            type: string
+                          password:
+                            type: string
+                          bearerToken:
+                            type: string
+            status:
+              type: object
+              properties:
+                anomalyResults:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      metricQuery:
+                        type: string
+                      anomalyResult:
+                        type: string
